@@ -10,7 +10,29 @@
             <div class="card">
                 <div class="card-header bg-primary text-white">Your Appointments</div>
                 <div class="card-body">
-                    <p>You have <strong>3</strong> upcoming appointments.</p>
+                    <h2>Your Appointments</h2>
+                    @if($appointments->isEmpty())
+                    <p>You have no upcoming appointments.</p>
+                    @else
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($appointments as $appointment)
+                            <tr>
+                                <td>{{ $appointment->service->name }}</td>
+                                <td>{{ $appointment->date }}</td>
+                                <td>{{ $appointment->status }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    @endif
                     <a href="{{ route('book.create') }}" class="btn btn-sm btn-primary">Book New Appointment</a>
                 </div>
             </div>

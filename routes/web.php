@@ -22,10 +22,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Client Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard.client');
-    })->name('client.dashboard');
-
+    Route::get('/dashboard', [ClientDashboardController::class, 'index'])->name('client.dashboard');
     Route::get('/book', function () {
         return view('bookings.create');
     })->name('book.create');
