@@ -13,11 +13,17 @@
                     <h5>Today's Appointments</h5>
                 </div>
                 <div class="card-body">
+                    @if($todaysAppointments->isEmpty())
+                    <p>No appointments scheduled for today.</p>
+                    @else
                     <ul class="list-group">
-                        <li class="list-group-item">9:00 AM - Client A (Haircut)</li>
-                        <li class="list-group-item">11:00 AM - Client B (Facial Treatment)</li>
-                        <li class="list-group-item">1:00 PM - Client C (Manicure & Pedicure)</li>
+                        @foreach($todaysAppointments as $appointment)
+                        <li class="list-group-item">
+                            {{ $appointment->time }} - {{ $appointment->client->name }} ({{ $appointment->service->name }})
+                        </li>
+                        @endforeach
                     </ul>
+                    @endif
                     <a href="{{ route('appointments.manage') }}" class="btn btn-info btn-sm mt-2">View All Appointments</a>
                 </div>
             </div>
@@ -33,6 +39,7 @@
                     <p>You are scheduled to work from <strong>8:00 AM - 5:00 PM</strong>.</p>
                     <p><strong>Next Day Off:</strong> Sunday</p>
                     <a href="#" class="btn btn-sm btn-warning">View Full Schedule</a>
+                    <p>Your work schedule: <strong>{{ $work_schedule ?? 'Not set' }}</strong></p>
                 </div>
             </div>
         </div>
@@ -46,10 +53,15 @@
                     <h5>Pending Client Requests</h5>
                 </div>
                 <div class="card-body">
+                    @if($clientRequests->isEmpty())
+                    <p>No pending client requests.</p>
+                    @else
                     <ul class="list-group">
-                        <li class="list-group-item">Client X requested an urgent reschedule</li>
-                        <li class="list-group-item">Client Y wants a home service</li>
+                        @foreach($clientRequests as $request)
+                        <li class="list-group-item">{{ $request->description }}</li>
+                        @endforeach
                     </ul>
+                    @endif
                     <a href="#" class="btn btn-primary btn-sm mt-2">Respond to Requests</a>
                 </div>
             </div>
@@ -66,9 +78,9 @@
                         @csrf
                         <label for="availability">Set Your Availability:</label>
                         <select name="availability" id="availability" class="form-control">
-                            <option value="available">Available</option>
-                            <option value="busy">Busy</option>
-                            <option value="off-duty">Off Duty</option>
+                            <option value="available" {{ $employee->availability == 'available' ? 'selected' : '' }}>Available</option>
+                            <option value="busy" {{ $employee->availability == 'busy' ? 'selected' : '' }}>Busy</option>
+                            <option value="off-duty" {{ $employee->availability == 'off-duty' ? 'selected' : '' }}>Off Duty</option>
                         </select>
                         <button type="submit" class="btn btn-sm btn-success mt-2">Update</button>
                     </form>

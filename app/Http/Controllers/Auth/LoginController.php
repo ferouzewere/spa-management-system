@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController
+class LoginController extends Controller
 {
     public function showLoginForm()
     {
@@ -27,5 +28,22 @@ class LoginController
     {
         Auth::logout();
         return redirect('/');
+    }
+
+    /**
+     * Where to redirect users after login.
+     *
+     * @return string
+     */
+    protected function redirectTo()
+    {
+        $user = Auth::user();
+
+        if ($user->role === 'employee') {
+            return route('dashboard.employee'); // Redirect employees to their dashboard
+        }
+
+        // Default redirection for other roles
+        return route('dashboard');
     }
 }

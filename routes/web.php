@@ -38,9 +38,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
     Route::post('/employee/update-availability', [EmployeeController::class, 'updateAvailability'])->name('employee.updateAvailability');
-    Route::get('/employee/appointments', function () {
-        return view('appointments.manage');
-    })->name('appointments.manage');
+    Route::get('/employee/appointments', [EmployeeController::class, 'manageAppointments'])->name('appointments.manage');
 });
 
 // Admin Routes

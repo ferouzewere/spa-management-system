@@ -10,13 +10,28 @@ class EmployeeController extends Controller
 {
     public function dashboard()
     {
-        return view('dashboard.employee');
+        $user = Auth::user();
+        $employee = Employee::where('user_id', $user->id)->firstOrFail();
+
+        $todaysAppointments = $employee->appointments()
+            ->whereDate('date', now()->toDateString())
+            ->orderBy('time')
+            ->get();
+
+        $clientRequests = []; // Assuming you will fetch client requests here
+
+        return view('dashboard.employee', [
+            'todaysAppointments' => $todaysAppointments,
+            'work_schedule' => $employee->work_schedule,
+            'clientRequests' => $clientRequests,
+            'employee' => $employee,
+        ]);
     }
 
     public function updateAvailability(Request $request)
     {
         $validated = $request->validate([
-            'availability' => 'required|boolean',
+            'availability' => 'required|string|in:available,busy,off-duty',
         ]);
 
         $user = Auth::user();
@@ -25,5 +40,14 @@ class EmployeeController extends Controller
         $employee->save();
 
         return back()->with('status', 'Availability updated successfully.');
+    }
+
+    public function manageAppointments()
+    {
+        $user = Auth::user();
+        $employee = Employee::where('user_id', $user->id)->firstOrFail();
+        $appointments = $employee->appointments; // Assuming a relationship exists
+
+        return view('appointments.manage', compact('appointments'));
     }
 }
