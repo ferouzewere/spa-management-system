@@ -23,9 +23,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // Client Routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [ClientDashboardController::class, 'index'])->name('client.dashboard');
-    Route::get('/book', function () {
-        return view('bookings.create');
-    })->name('book.create');
+    Route::match(['get', 'post'], '/book', [BookingController::class, 'create'])->name('book.create');
 
     Route::get('/payments/mpesa', function () {
         return view('payments.mpesa');
