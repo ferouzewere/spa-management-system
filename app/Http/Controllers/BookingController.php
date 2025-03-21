@@ -36,20 +36,28 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'employee_id' => 'required|exists:employees,id',
+        // Change this if errors arise in storing booked appointments.
+
+        // Validate the request
+        $validated = $request->validate([
             'service_id' => 'required|exists:services,id',
-            'appointment_time' => 'required|date|after:now',
+            'appointment_time' => 'required|date',
         ]);
 
+        // Automatically assign an employee (example: first available employee)
+        $employee = Employee::where('is_available', true)->first();
+
+        if (!$employee) {
+            return back()->withErrors(['error' => 'No available employees at the moment.']);
+        }
+
+        // Create the booking
         Booking::create([
-            'user_id' => \Illuminate\Support\Facades\Auth::user()->id,
-            'employee_id' => $request->employee_id,
-            'service_id' => $request->service_id,
-            'appointment_time' => $request->appointment_time,
-            'status' => 'pending'
+            'service_id' => $validated['service_id'],
+            'employee_id' => $employee->id,
+            'appointment_time' => $validated['appointment_time'],
         ]);
 
-        return redirect()->route('client.dashboard')->with('success', 'Booking Confirmed');
+        return redirect()->route('bookings.index')->with('success', 'Appointment booked successfully!');
     }
 }

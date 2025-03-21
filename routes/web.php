@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ClientDashboardController;
+use App\Http\Controllers\BookingController;
 
 // Public Routes
 Route::get('/', function () {
@@ -14,6 +18,7 @@ Route::get('/', function () {
 });
 
 // Authentication Routes
+
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -39,6 +44,7 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
     Route::post('/employee/update-availability', [EmployeeController::class, 'updateAvailability'])->name('employee.updateAvailability');
     Route::get('/employee/appointments', [EmployeeController::class, 'manageAppointments'])->name('appointments.manage');
+    Route::get('/dashboard/employee', [EmployeeController::class, 'dashboard'])->name('dashboard.employee');
 });
 
 // Admin Routes

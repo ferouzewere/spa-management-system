@@ -17,17 +17,6 @@
             </select>
         </div>
 
-        <!-- Employee Selection -->
-        <div class="form-group mt-3">
-            <label for="employee">Select an Employee</label>
-            <select name="employee_id" id="employee" class="form-control" required>
-                <option value="">-- Select an Employee --</option>
-                @foreach ($employees as $employee)
-                <option value="{{ $employee->id }}">{{ $employee->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
         <!-- Appointment Time -->
         <div class="form-group mt-3">
             <label for="appointment_time">Appointment Time</label>
