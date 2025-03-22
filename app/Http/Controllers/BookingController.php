@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Service;
 use App\Models\Booking;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -50,6 +51,7 @@ class BookingController extends Controller
             'service_id' => $validated['service_id'],
             'appointment_time' => $validated['appointment_time'],
             'employee_id' => $employee->id ?? null,
+            'customer_id' => Auth::user()->id, // Assign the currently authenticated user as the customer
         ]);
 
         // Redirect to the bookings.index view with a success message

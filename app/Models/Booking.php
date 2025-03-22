@@ -9,7 +9,7 @@ class Booking extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['service_id', 'appointment_time', 'employee_id'];
+    protected $fillable = ['service_id', 'appointment_time', 'employee_id', 'customer_id'];
 
     public function service()
     {
@@ -19,5 +19,10 @@ class Booking extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(User::class, 'customer_id');
     }
 }

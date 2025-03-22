@@ -1,31 +1,40 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.app')
 
-<head>
-    <title>Appointment Details</title>
-</head>
+@section('content')
 
-<body>
-    <h1>Your Appointment Details</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Your Appointment Details</h1>
 
     @if(session('success'))
-    <p style="color: green;">{{ session('success') }}</p>
+    <div class="alert alert-success text-center">
+        {{ session('success') }}
+    </div>
     @endif
 
-    <table border="1">
-        <tr>
-            <th>Service</th>
-            <th>Appointment Time</th>
-            <th>Assigned Employee</th>
-        </tr>
-        <tr>
-            <td>{{ $booking->service->name }}</td>
-            <td>{{ $booking->appointment_time }}</td>
-            <td>{{ $booking->employee->name ?? 'Not Assigned' }}</td>
-        </tr>
-    </table>
+    <div class="card shadow-lg rounded">
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Service</th>
+                        <th>Appointment Time</th>
+                        <th>Assigned Employee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ $booking->service->name }}</td>
+                        <td>{{ \Carbon\Carbon::parse($booking->appointment_time)->format('F j, Y, g:i A') }}</td>
+                        <td>{{ $booking->employee->name ?? 'Not Assigned' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <a href="/">Back to Home</a>
-</body>
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-primary">Back to Home</a>
+    </div>
+</div>
 
-</html>
+@endsection
