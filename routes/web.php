@@ -68,3 +68,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::get('/404', function () {
     return view('errors.404');
 })->name('error.404');
+
+Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+Route::post('/bookings', [BookingController::class, 'store'])->name('book.create');
