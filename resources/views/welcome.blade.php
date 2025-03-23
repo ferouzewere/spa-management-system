@@ -11,7 +11,12 @@
     <div class="position-absolute top-50 start-50 translate-middle text-center text-white w-100 px-3">
         <h1 class="fw-bold display-4">Welcome to Our Salon & Spa</h1>
         <p class="fs-4">Experience luxury and relaxation with our professional beauty services.</p>
+
+        @if(Auth::check())
         <a href="{{ route('book.create') }}" class="btn btn-lg btn-primary m-2">Book an Appointment</a>
+        @else
+        <a href="{{ route('login') }}" class="btn btn-lg btn-primary m-2">Login to Book</a>
+        @endif
     </div>
 </div>
 @endsection

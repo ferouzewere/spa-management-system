@@ -34,6 +34,7 @@
 
     <div class="text-center mt-4">
         <a href="/" class="btn btn-primary">Back to Home</a>
+        <a href="{{ url('/book') }}" class="btn btn-primary">Book New Appointment</a>
     </div>
 </div>
 
