@@ -5,12 +5,6 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Your Appointment Details</h1>
 
-    @if(session('success'))
-    <div class="alert alert-success text-center">
-        {{ session('success') }}
-    </div>
-    @endif
-
     <div class="card shadow-lg rounded">
         <div class="card-body">
             <table class="table table-bordered table-striped">
