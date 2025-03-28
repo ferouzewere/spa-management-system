@@ -37,14 +37,28 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
-        $booking = Booking::create([
-            'service_id' => $request->service_id,
-            'appointment_time' => $request->appointment_time,
-            'employee_id' => $request->employee_id,
-            'user_id' => Auth::id(),
+        // Validate the form data
+        $validated = $request->validate([
+            'service_id' => 'required|exists:services,id',
+            'appointment_time' => 'required|date',
         ]);
 
-        return redirect()->route('bookings.index')->with('success', 'Your booking has been successfully created!');
+        // Automatically assign an employee (example: first available employee)
+        $employee = Employee::where('is_available', true)->first();
+
+        // Save the booking to the database
+        $booking = Booking::create([
+            'service_id' => $validated['service_id'],
+            'appointment_time' => $validated['appointment_time'],
+            'employee_id' => $employee->id ?? null,
+            'customer_id' => Auth::user()->id, // Assign the currently authenticated user as the customer
+        ]);
+
+        // Redirect to the dashboard view with a success message
+        return redirect()->route('client.dashboard')->with([
+            'success' => 'Your booking has been successfully created!',
+            'booking' => $booking, // Pass the booking details to the session
+        ]);
     }
 
     public function index()

@@ -71,3 +71,7 @@ Route::get('/404', function () {
 
 Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
 Route::post('/bookings', [BookingController::class, 'store'])->name('book.create');
+// Route to display the booking form
+Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+
+Route::get('/dashboard', [ClientDashboardController::class, 'index'])->name('client.dashboard');
