@@ -33,7 +33,7 @@
                         </tbody>
                     </table>
                     @endif
-                    <a href="{{ route('book.create') }}" class="btn btn-sm btn-primary mt-3">Book New Appointment</a>
+                    <a href="{{ url('/book') }}" class="btn btn-sm btn-primary mt-3">Book New Appointment</a>
                 </div>
             </div>
         </div>
