@@ -1,6 +1,24 @@
 <div class="card">
     <div class="card-header bg-primary text-white">Your Appointments</div>
     <div class="card-body">
+        @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    title: 'Booking Confirmed!',
+                    html: `
+                    <strong>Service:</strong> {{ session('booking')->service->name }}<br>
+                    <strong>Appointment Time:</strong> {{ \Carbon\Carbon::parse(session('booking')->appointment_time)->format('F j, Y, g:i A') }}<br>
+                    <strong>Assigned Employee:</strong> {{ session('booking')->employee->name ?? 'Not Assigned' }}
+                `,
+                    icon: 'success',
+                    timer: 5000,
+                    showConfirmButton: false
+                });
+            });
+        </script>
+        @endif
+
         @if($appointments->isEmpty())
         <p>You have no upcoming appointments.</p>
         @else

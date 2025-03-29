@@ -5,6 +5,7 @@
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3">
+            <h2>Welcome, {{ Auth::user()->name }}!</h2>
             <div class="list-group sticky-top">
                 <a href="#" class="list-group-item list-group-item-action active" data-tab="appointments">
                     <i class="fas fa-calendar-alt"></i> Appointments
