@@ -1,72 +1,64 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-4">
-    <h2>Welcome, {{ Auth::user()->name }}!</h2>
-    <p>Here you can manage your bookings and payments.</p>
-
+<div class="container-fluid mt-4">
     <div class="row">
-        <!-- Appointments Section -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">Your Appointments</div>
-                <div class="card-body">
-                    @if(session('success'))
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            Swal.fire({
-                                title: 'Booking Confirmed!',
-                                html: `
-                    <strong>Service:</strong> {{ session('booking')->service->name }}<br>
-                    <strong>Appointment Time:</strong> {{ \Carbon\Carbon::parse(session('booking')->appointment_time)->format('F j, Y, g:i A') }}<br>
-                    <strong>Assigned Employee:</strong> {{ session('booking')->employee->name ?? 'Not Assigned' }}
-                `,
-                                icon: 'success',
-                                timer: 5000,
-                                showConfirmButton: false
-                            });
-                        });
-                    </script>
-                    @endif
-
-                    @if($appointments->isEmpty())
-                    <p>You have no upcoming appointments.</p>
-                    @else
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Service</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($appointments as $appointment)
-                            <tr>
-                                <td>{{ $appointment->service->name }}</td>
-                                <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('F j, Y, g:i A') }}</td>
-                                <td>{{ ucfirst($appointment->status) }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    @endif
-                    <a href="{{ url('/book') }}" class="btn btn-sm btn-primary mt-3">Book New Appointment</a>
-                </div>
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="list-group sticky-top">
+                <a href="#" class="list-group-item list-group-item-action active" data-tab="appointments">
+                    <i class="fas fa-calendar-alt"></i> Appointments
+                </a>
+                <a href="#" class="list-group-item list-group-item-action" data-tab="payments">
+                    <i class="fas fa-wallet"></i> Payments
+                </a>
+                <a href="#" class="list-group-item list-group-item-action" data-tab="reviews">
+                    <i class="fas fa-star"></i> Reviews
+                </a>
+                <a href="#" class="list-group-item list-group-item-action" data-tab="notifications">
+                    <i class="fas fa-bell"></i> Notifications
+                </a>
+                <a href="#" class="list-group-item list-group-item-action" data-tab="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
             </div>
         </div>
 
-        <!-- Payment History Section -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-success text-white">Payment History</div>
-
+        <!-- Main Content Area -->
+        <div class="col-md-9">
+            <div id="dashboard-content">
+                <!-- Default Content (Appointments) -->
+                @include('dashboard.appointments')
             </div>
         </div>
-    </div>
-
-    <div class="mt-4">
-        <a href="{{ route('reviews.index') }}" class="btn btn-warning">Give a Review</a>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.list-group-item');
+        const contentArea = document.getElementById('dashboard-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                // Fetch and load the content dynamically
+                const tabName = this.getAttribute('data-tab');
+                fetch(`/dashboard/${tabName}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        contentArea.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error loading tab content:', error));
+            });
+        });
+    });
+</script>
+@endpush

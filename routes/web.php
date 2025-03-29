@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\BookingController;
+use App\Models\Booking;
 
 // Public Routes
 Route::get('/', function () {
@@ -37,6 +38,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/reviews', function () {
         return view('reviews.index');
     })->name('reviews.index');
+
+    // Handle AJAX requests for each tab in client dashboard
+
+    Route::get('/dashboard/appointments', function () {
+        $appointments = Booking::where('user_id', Auth::id())->get();
+        return view('dashboard.appointments', compact('appointments'));
+    });
+
+    Route::get('/dashboard/payments', function () {
+        return view('dashboard.payments');
+    });
+
+    Route::get('/dashboard/reviews', function () {
+        return view('dashboard.reviews');
+    });
+
+    Route::get('/dashboard/notifications', function () {
+        return view('dashboard.notifications');
+    });
+
+    Route::get('/dashboard/settings', function () {
+        return view('dashboard.settings');
+    });
 });
 
 // Employee Routes
