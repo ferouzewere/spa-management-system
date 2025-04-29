@@ -1,0 +1,64 @@
+/* Dashboard Layout Styles */
+.sticky-top {
+    top: 20px;
+}
+
+.list-group-item {
+    border-radius: 0;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+    border-left-color: #0d6efd;
+    background-color: #f8f9fa;
+}
+
+.list-group-item.active {
+    border-left-color: #0d6efd;
+}
+
+.list-group-item i {
+    width: 20px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+/* Card Styles */
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1rem;
+}
+
+/* Loading Animation */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.loading i {
+    font-size: 2rem;
+    color: #0d6efd;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .sticky-top {
+        position: relative;
+        top: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .list-group-item {
+        border-left-width: 0;
+        border-bottom: 3px solid transparent;
+    }
+    
+    .list-group-item:hover,
+    .list-group-item.active {
+        border-left-width: 0;
+        border-bottom-color: #0d6efd;
+    }
+}

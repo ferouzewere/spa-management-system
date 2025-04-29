@@ -44,15 +44,18 @@
 
         tabs.forEach(tab => {
             tab.addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent default link behavior
+                e.preventDefault();
 
                 // Remove active class from all tabs
                 tabs.forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
 
+                // Show loading state
+                contentArea.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+
                 // Fetch and load the content dynamically
                 const tabName = this.getAttribute('data-tab');
-                fetch(`/dashboard/admin/${tabName}`)
+                fetch(`/dashboard/${tabName}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
