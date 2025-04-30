@@ -18,7 +18,7 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('/dashboard');
+            return $this->redirectBasedOnRole();
         }
 
         return back()->withErrors(['email' => 'Invalid credentials.']);
@@ -31,19 +31,20 @@ class LoginController extends Controller
     }
 
     /**
-     * Where to redirect users after login.
-     *
-     * @return string
+     * Redirect users based on their role
      */
-    protected function redirectTo()
+    protected function redirectBasedOnRole()
     {
         $user = Auth::user();
 
-        if ($user->role === 'employee') {
-            return route('dashboard.employee'); // Redirect employees to their dashboard
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->isManager()) {
+            return redirect()->route('manager.dashboard');
+        } elseif ($user->isEmployee()) {
+            return redirect()->route('employee.dashboard');
+        } else {
+            return redirect()->route('client.dashboard');
         }
-
-        // Default redirection for other roles
-        return route('dashboard');
     }
 }

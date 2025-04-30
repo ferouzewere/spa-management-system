@@ -2,10 +2,10 @@
 
 namespace App\Http;
 
-class Kernel
+class Kernel extends HttpKernel
 {
     protected $routeMiddleware = [
         // ...existing middleware...
-        'role' => \App\Http\Middleware\RoleMiddleware::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
     ];
 }

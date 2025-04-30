@@ -18,6 +18,7 @@ use App\Models\Appointment;
 use App\Models\Payment;
 use App\Models\Review;
 use App\Models\User;
+use App\Models\Service;
 
 // Public Routes
 Route::get('/', function () {
@@ -40,6 +41,55 @@ Route::middleware('auth')->group(function () {
     // Client Dashboard & Features
     Route::get('/dashboard', [ClientDashboardController::class, 'index'])->name('client.dashboard');
 
+    // Dashboard Tab Routes
+    Route::get('/dashboard/appointments', function () {
+        $appointments = Booking::where('customer_id', Auth::id())
+            ->orderBy('appointment_time', 'desc')
+            ->get();
+        return view('dashboard.appointments', compact('appointments'));
+    })->name('client.appointments');
+
+    Route::get('/dashboard/payments', function () {
+        $payments = Payment::where('customer_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('dashboard.payments', compact('payments'));
+    })->name('client.payments');
+
+    Route::get('/dashboard/reviews', function () {
+        $reviews = Review::where('customer_id', Auth::id())
+            ->with('service') // Eager load service relationship
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $services = Service::all(); // Get all services for the review form
+        return view('dashboard.reviews', compact('reviews', 'services'));
+    })->name('client.reviews');
+
+    Route::post('/reviews', function (Request $request) {
+        $validated = $request->validate([
+            'service_id' => 'required|exists:services,id',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:500'
+        ]);
+
+        Review::create([
+            'customer_id' => Auth::id(),
+            'service_id' => $validated['service_id'],
+            'rating' => $validated['rating'],
+            'comment' => $validated['comment']
+        ]);
+
+        return back()->with('success', 'Review submitted successfully!');
+    })->name('reviews.store');
+
+    Route::get('/dashboard/notifications', function () {
+        return view('dashboard.notifications');
+    })->name('client.notifications');
+
+    Route::get('/dashboard/settings', function () {
+        return view('dashboard.settings');
+    })->name('client.settings');
+
     // Booking Routes
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
@@ -55,29 +105,7 @@ Route::middleware('auth')->group(function () {
         return view('reviews.index');
     })->name('reviews.index');
 
-    // Dashboard Tab Routes
-    Route::get('/dashboard/appointments', function () {
-        $appointments = Appointment::where('user_id', Auth::id())->get();
-        return view('dashboard.appointments', compact('appointments'));
-    });
-
-    Route::get('/dashboard/payments', function () {
-        $payments = Payment::where('user_id', Auth::id())->get();
-        return view('dashboard.payments', compact('payments'));
-    });
-
-    Route::get('/dashboard/reviews', function () {
-        $reviews = Review::where('user_id', Auth::id())->get();
-        return view('dashboard.reviews', compact('reviews'));
-    });
-
-    Route::get('/dashboard/notifications', function () {
-        return view('dashboard.notifications');
-    });
-
-    Route::get('/dashboard/settings', function () {
-        return view('dashboard.settings');
-    });
+    // ...rest of the existing routes...
 
     // Profile Settings Routes
     Route::put('/profile/update', function (Request $request) {
@@ -125,19 +153,11 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
 });
 
 // Admin Routes
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::post('/admin/bookings/{id}', [AdminController::class, 'updateBookingStatus'])->name('admin.updateBookingStatus');
-    Route::get('/admin/bookings', function () {
-        return view('bookings.index');
-    })->name('admin.bookings');
-    Route::get('/admin/employees', function () {
-        return view('employees.index');
-    })->name('admin.employees');
-    Route::get('/admin/services', function () {
-        return view('services.index');
-    })->name('admin.services');
-    Route::get('/admin/reports', function () {
-        return view('reports.transactions');
-    })->name('admin.reports');
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');
+    Route::post('/users', [AdminController::class, 'storeUser'])->name('admin.users.store');
+    Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
+    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+    Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
 });

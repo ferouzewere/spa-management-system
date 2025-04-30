@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'preferences',
+        'role_id',
     ];
 
     /**
@@ -58,5 +59,30 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function hasRole($roleName)
+    {
+        return $this->role->name === $roleName;
+    }
+
+    public function isAdmin()
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function isManager()
+    {
+        return $this->hasRole('manager');
+    }
+
+    public function isEmployee()
+    {
+        return $this->hasRole('employee');
+    }
+
+    public function isClient()
+    {
+        return $this->hasRole('client');
     }
 }

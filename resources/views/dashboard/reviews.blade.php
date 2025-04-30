@@ -44,7 +44,9 @@
                         <label for="service" class="form-label">Service</label>
                         <select class="form-select" id="service" name="service_id" required>
                             <option value="">Select a service</option>
-                            <!-- Add service options dynamically -->
+                            @foreach($services as $service)
+                            <option value="{{ $service->id }}">{{ $service->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
@@ -69,3 +71,10 @@
         </div>
     </div>
 </div>
+
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif

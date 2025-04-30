@@ -7,19 +7,19 @@
         <div class="col-md-3">
             <h2>Welcome, {{ Auth::user()->name }}!</h2>
             <div class="list-group sticky-top">
-                <a href="{{ url('/dashboard/appointments') }}" class="list-group-item list-group-item-action active" data-tab="appointments">
+                <a href="{{ route('client.appointments') }}" class="list-group-item list-group-item-action active" data-tab="appointments">
                     <i class="fas fa-calendar-alt"></i> Appointments
                 </a>
-                <a href="{{ url('/dashboard/payments') }}" class="list-group-item list-group-item-action" data-tab="payments">
+                <a href="{{ route('client.payments') }}" class="list-group-item list-group-item-action" data-tab="payments">
                     <i class="fas fa-wallet"></i> Payments
                 </a>
-                <a href="{{ url('/dashboard/reviews') }}" class="list-group-item list-group-item-action" data-tab="reviews">
+                <a href="{{ route('client.reviews') }}" class="list-group-item list-group-item-action" data-tab="reviews">
                     <i class="fas fa-star"></i> Reviews
                 </a>
-                <a href="{{ url('/dashboard/notifications') }}" class="list-group-item list-group-item-action" data-tab="notifications">
+                <a href="{{ route('client.notifications') }}" class="list-group-item list-group-item-action" data-tab="notifications">
                     <i class="fas fa-bell"></i> Notifications
                 </a>
-                <a href="{{ url('/dashboard/settings') }}" class="list-group-item list-group-item-action" data-tab="settings">
+                <a href="{{ route('client.settings') }}" class="list-group-item list-group-item-action" data-tab="settings">
                     <i class="fas fa-cog"></i> Settings
                 </a>
             </div>
@@ -54,8 +54,7 @@
                 contentArea.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
 
                 // Fetch and load the content dynamically
-                const tabName = this.getAttribute('data-tab');
-                fetch(`/dashboard/${tabName}`)
+                fetch(this.href)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');

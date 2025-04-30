@@ -2,27 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
-use App\Models\Booking;
-use App\Models\Employee;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
     public function dashboard()
     {
-        return view('dashboard.admin');
+        $users = User::with('role')->get();
+        $roles = Role::all();
+        return view('admin.dashboard', compact('users', 'roles'));
     }
 
-    public function updateBookingStatus(Request $request, $id)
+    public function createUser()
+    {
+        $roles = Role::all();
+        return view('admin.users.create', compact('roles'));
+    }
+
+    public function storeUser(Request $request)
     {
         $validated = $request->validate([
-            'status' => 'required|string',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'role_id' => 'required|exists:roles,id'
         ]);
 
-        $booking = Booking::findOrFail($id);
-        $booking->status = $validated['status'];
-        $booking->save();
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role_id' => $validated['role_id']
+        ]);
 
-        return back()->with('status', 'Booking status updated successfully.');
+        return redirect()->route('admin.dashboard')->with('success', 'User created successfully');
+    }
+
+    public function editUser(User $user)
+    {
+        $roles = Role::all();
+        return view('admin.users.edit', compact('user', 'roles'));
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'role_id' => 'required|exists:roles,id'
+        ]);
+
+        $user->update($validated);
+
+        return redirect()->route('admin.dashboard')->with('success', 'User updated successfully');
+    }
+
+    public function deleteUser(User $user)
+    {
+        $user->delete();
+        return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully');
     }
 }

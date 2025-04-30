@@ -11,12 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('phone')->unique();
-            $table->enum('role', ['client', 'employee', 'admin'])->default('client');
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->json('preferences')->nullable();
+            $table->foreignId('role_id')->nullable()->constrained('roles')->onDelete('set null');
+            $table->rememberToken();
+            $table->timestamps();
         });
-
-
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

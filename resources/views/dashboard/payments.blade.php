@@ -29,6 +29,13 @@
             </tbody>
         </table>
         @endif
-        <a href="{{ url('/make-payment') }}" class="btn btn-success mt-3">Make a Payment</a>
+        <a href="{{ route('mpesa.payment') }}" class="btn btn-success mt-3">Make a Payment</a>
     </div>
 </div>
+
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif

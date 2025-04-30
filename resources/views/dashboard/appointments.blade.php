@@ -1,46 +1,47 @@
 <div class="card">
-    <div class="card-header bg-primary text-white">Your Appointments</div>
+    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+        <span>Your Appointments</span>
+        <a href="{{ route('bookings.create') }}" class="btn btn-light btn-sm">Book New Appointment</a>
+    </div>
     <div class="card-body">
-        @if(session('success'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Swal.fire({
-                    title: 'Booking Confirmed!',
-                    html: `
-                    <strong>Service:</strong> {{ session('booking')->service->name }}<br>
-                    <strong>Appointment Time:</strong> {{ \Carbon\Carbon::parse(session('booking')->appointment_time)->format('F j, Y, g:i A') }}<br>
-                    <strong>Assigned Employee:</strong> {{ session('booking')->employee->name ?? 'Not Assigned' }}
-                `,
-                    icon: 'success',
-                    timer: 5000,
-                    showConfirmButton: false
-                });
-            });
-        </script>
-        @endif
-
         @if($appointments->isEmpty())
-        <p>You have no upcoming appointments.</p>
+        <p class="text-muted">No appointments found.</p>
         @else
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Service</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($appointments as $appointment)
-                <tr>
-                    <td>{{ $appointment->service->name }}</td>
-                    <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('F j, Y, g:i A') }}</td>
-                    <td>{{ ucfirst($appointment->status) }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Service</th>
+                        <th>Employee</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($appointments as $appointment)
+                    <tr>
+                        <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('M d, Y h:i A') }}</td>
+                        <td>{{ $appointment->service->name ?? 'N/A' }}</td>
+                        <td>{{ $appointment->employee->user->name ?? 'To be assigned' }}</td>
+                        <td>
+                            <span class="badge bg-{{ $appointment->status === 'confirmed' ? 'success' : 
+                                ($appointment->status === 'pending' ? 'warning' : 
+                                ($appointment->status === 'cancelled' ? 'danger' : 'secondary')) }}">
+                                {{ ucfirst($appointment->status) }}
+                            </span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
         @endif
-        <a href="{{ url('/book') }}" class="btn btn-sm btn-primary mt-3">Book New Appointment</a>
     </div>
 </div>
+
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
