@@ -1,31 +1,29 @@
-<div class="card">
-    <div class="card-header bg-primary text-white">Your Reviews</div>
-    <div class="card-body">
+<div class="bg-white shadow-md rounded my-6">
+    <div class="px-6 py-4 bg-gray-200 border-b border-gray-200 flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-600">Your Reviews</h2>
+        <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" data-bs-toggle="modal" data-bs-target="#newReviewModal">
+            Write a Review
+        </button>
+    </div>
+    <div class="p-6">
         @if($reviews->isEmpty())
-        <p class="text-muted">You haven't submitted any reviews yet.</p>
+        <p class="text-gray-500">You haven't submitted any reviews yet.</p>
         @else
-        <div class="row">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @foreach($reviews as $review)
-            <div class="col-md-6 mb-3">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $review->service->name ?? 'Service' }}</h5>
-                        <div class="mb-2">
-                            @for($i = 1; $i <= 5; $i++)
-                                <i class="fas fa-star {{ $i <= $review->rating ? 'text-warning' : 'text-muted' }}"></i>
-                                @endfor
-                        </div>
-                        <p class="card-text">{{ $review->comment }}</p>
-                        <small class="text-muted">{{ $review->created_at->format('M d, Y') }}</small>
-                    </div>
+            <div class="bg-white shadow rounded-lg p-6 border border-gray-200">
+                <h3 class="font-semibold text-lg text-gray-700 mb-2">{{ $review->service->name ?? 'Service' }}</h3>
+                <div class="flex items-center mb-3">
+                    @for($i = 1; $i <= 5; $i++)
+                        <i class="fas fa-star {{ $i <= $review->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                        @endfor
                 </div>
+                <p class="text-gray-600 mb-3">{{ $review->comment }}</p>
+                <span class="text-sm text-gray-500">{{ $review->created_at->format('M d, Y') }}</span>
             </div>
             @endforeach
         </div>
         @endif
-        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#newReviewModal">
-            Write a Review
-        </button>
     </div>
 </div>
 

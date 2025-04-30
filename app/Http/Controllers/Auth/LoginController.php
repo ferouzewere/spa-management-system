@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -35,16 +36,21 @@ class LoginController extends Controller
      */
     protected function redirectBasedOnRole()
     {
-        $user = Auth::user();
+        $user = User::with('role')->find(Auth::id());
 
-        if ($user->isAdmin()) {
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->isManager()) {
-            return redirect()->route('manager.dashboard');
-        } elseif ($user->isEmployee()) {
-            return redirect()->route('employee.dashboard');
-        } else {
+        if (!$user || !$user->role) {
             return redirect()->route('client.dashboard');
+        }
+
+        switch ($user->role->name) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'manager':
+                return redirect()->route('manager.dashboard');
+            case 'employee':
+                return redirect()->route('employee.dashboard');
+            default:
+                return redirect()->route('client.dashboard');
         }
     }
 }

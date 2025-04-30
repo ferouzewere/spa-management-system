@@ -23,15 +23,23 @@ class RegisterController extends Controller
             'password' => 'required|string|min:5|confirmed',
         ]);
 
+        // Get the client role ID (should be 4 based on the seeder)
+        $clientRole = \App\Models\Role::where('name', 'client')->first();
+        
+        if (!$clientRole) {
+            // If roles haven't been seeded, we should handle this error
+            return redirect()->back()->withErrors(['error' => 'Registration system is not properly configured.']);
+        }
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
-            'role' => 'client', // Ensure the role is set to 'client'
+            'role_id' => $clientRole->id,
         ]);
 
         Auth::login($user);
 
-        return redirect()->route('client.dashboard'); // Redirect to client dashboard
+        return redirect()->route('client.dashboard');
     }
 }

@@ -13,7 +13,7 @@
         <p class="fs-4">Experience luxury and relaxation with our professional beauty services.</p>
 
         @if(Auth::check())
-        <a href="{{ url('/book') }}" class="btn btn-lg btn-primary m-2">Book an Appointment</a>
+        <a href="{{ route('bookings.create') }}" class="btn btn-lg btn-primary m-2">Book an Appointment</a>
         @else
         <a href="{{ route('login') }}" class="btn btn-lg btn-primary m-2">Login to Book</a>
         @endif

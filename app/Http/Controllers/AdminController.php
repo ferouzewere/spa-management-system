@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,7 +14,16 @@ class AdminController extends Controller
     {
         $users = User::with('role')->get();
         $roles = Role::all();
-        return view('admin.dashboard', compact('users', 'roles'));
+        $services = \App\Models\Service::all();
+        $bookings = Booking::with(['service', 'customer', 'employee.user'])->orderBy('appointment_time', 'desc')->get();
+        $totalCustomers = User::whereHas('role', function ($q) {
+            $q->where('name', 'client');
+        })->count();
+        $totalAppointments = $bookings->count();
+        $completedAppointments = $bookings->where('status', 'confirmed')->count();
+        $busyWorkers = \App\Models\Employee::where('is_available', false)->count();
+        $freeWorkers = \App\Models\Employee::where('is_available', true)->count();
+        return view('admin.dashboard', compact('users', 'roles', 'services', 'bookings', 'totalCustomers', 'totalAppointments', 'completedAppointments', 'busyWorkers', 'freeWorkers'));
     }
 
     public function createUser()

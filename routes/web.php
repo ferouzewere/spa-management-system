@@ -91,9 +91,11 @@ Route::middleware('auth')->group(function () {
     })->name('client.settings');
 
     // Booking Routes
-    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
-    Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
-    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+    Route::prefix('bookings')->group(function () {
+        Route::get('/', [BookingController::class, 'index'])->name('bookings.index');
+        Route::get('/create', [BookingController::class, 'create'])->name('bookings.create');
+        Route::post('/', [BookingController::class, 'store'])->name('bookings.store');
+    });
 
     // Payment Routes
     Route::get('/payments/mpesa', function () {
@@ -153,11 +155,12 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
 });
 
 // Admin Routes
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');
     Route::post('/users', [AdminController::class, 'storeUser'])->name('admin.users.store');
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
     Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
     Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+    Route::resource('services', ServiceController::class)->except(['show']);
 });

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Page Title</title>
+    <title>Employees</title>
 </head>
 <body>
     <h1>Welcome to Page Name</h1>

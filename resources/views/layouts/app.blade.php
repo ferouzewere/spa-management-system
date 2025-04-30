@@ -93,7 +93,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-0">
             @yield('content')
         </main>
         <div class="toast-container"></div>
@@ -102,6 +102,19 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Add CSRF token to all fetch requests
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Override fetch to automatically include CSRF token
+        const originalFetch = window.fetch;
+        window.fetch = function() {
+            let [url, config] = arguments;
+            config = config || {};
+            config.headers = config.headers || {};
+            config.headers['X-CSRF-TOKEN'] = csrfToken;
+            return originalFetch(url, config);
+        };
+
         function showToast(message, type = 'success') {
             const container = document.querySelector('.toast-container');
             const toast = document.createElement('div');

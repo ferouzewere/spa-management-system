@@ -1,0 +1,29 @@
+# PHP Version Requirement
+php >= 8.2
+
+# PHP Extensions
+ext-ctype
+ext-curl
+ext-dom
+ext-fileinfo
+ext-json
+ext-mbstring
+ext-openssl
+ext-pdo
+ext-tokenizer
+ext-xml
+
+# Node.js Version
+node >= 16.0.0
+
+# Package Managers
+composer >= 2.0.0
+npm >= 7.0.0
+
+# To install all dependencies, run the following commands:
+# 1. composer install
+# 2. npm install
+# 3. cp .env.example .env
+# 4. php artisan key:generate
+# 5. touch database/database.sqlite
+# 6. php artisan migrate --seed
