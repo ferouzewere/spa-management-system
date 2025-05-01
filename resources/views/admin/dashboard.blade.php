@@ -27,7 +27,7 @@
     <!-- Main Content -->
     <main class="flex-1 px-8 py-8">
         <div id="section-dashboard" class="admin-section">
-            <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+            <h1 class="text-3xl font-bold mb-6">Management Summary</h1>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <!-- Total Sales/Collection -->
                 <div class="bg-white shadow rounded-lg p-6 flex flex-col items-center">

@@ -54,17 +54,17 @@
         <div class="p-8">
             <!-- Appointments Section -->
             <div id="section-appointments" class="client-section">
-                @include('dashboard.appointments')
+                {!! $appointmentsData !!}
             </div>
 
             <!-- Payments Section -->
             <div id="section-payments" class="client-section hidden">
-                @include('dashboard.payments')
+                {!! $paymentsData !!}
             </div>
 
             <!-- Reviews Section -->
             <div id="section-reviews" class="client-section hidden">
-                @include('dashboard.reviews')
+                {!! $reviewsData !!}
             </div>
 
             <!-- Notifications Section -->

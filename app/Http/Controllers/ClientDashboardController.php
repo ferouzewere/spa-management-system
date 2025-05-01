@@ -14,22 +14,24 @@ class ClientDashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // Fetch all necessary data for the dashboard
-        $appointments = Booking::where('customer_id', $user->id)
-            ->orderBy('appointment_time', 'desc')
-            ->get();
 
-        $payments = Payment::where('customer_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $reviews = Review::where('customer_id', $user->id)
-            ->with('service')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $services = Service::all();
-
-        return view('dashboard.client', compact('appointments', 'payments', 'reviews', 'services'));
+        return view('dashboard.client')
+            ->with('appointmentsData', view('dashboard.appointments', [
+                'appointments' => Booking::where('customer_id', $user->id)
+                    ->orderBy('appointment_time', 'desc')
+                    ->get()
+            ])->render())
+            ->with('paymentsData', view('dashboard.payments', [
+                'payments' => Payment::where('customer_id', $user->id)
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+            ])->render())
+            ->with('reviewsData', view('dashboard.reviews', [
+                'reviews' => Review::where('customer_id', $user->id)
+                    ->with('service')
+                    ->orderBy('created_at', 'desc')
+                    ->get(),
+                'services' => Service::all()
+            ])->render());
     }
 }

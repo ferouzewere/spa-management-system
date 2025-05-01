@@ -1,25 +1,30 @@
 <div class="bg-white shadow-md rounded my-6">
-    <div class="px-6 py-4 bg-gray-200 border-b border-gray-200 flex justify-between items-center">
+    <div class="px-6 py-4 bg-gray-200 border-b border-gray-200">
         <h2 class="text-xl font-semibold text-gray-600">Your Reviews</h2>
-        <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" data-bs-toggle="modal" data-bs-target="#newReviewModal">
-            Write a Review
-        </button>
     </div>
     <div class="p-6">
         @if($reviews->isEmpty())
-        <p class="text-gray-500">You haven't submitted any reviews yet.</p>
+        <p class="text-gray-500">You haven't written any reviews yet.</p>
         @else
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-4">
             @foreach($reviews as $review)
-            <div class="bg-white shadow rounded-lg p-6 border border-gray-200">
-                <h3 class="font-semibold text-lg text-gray-700 mb-2">{{ $review->service->name ?? 'Service' }}</h3>
-                <div class="flex items-center mb-3">
-                    @for($i = 1; $i <= 5; $i++)
-                        <i class="fas fa-star {{ $i <= $review->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
-                        @endfor
+            <div class="border rounded-lg p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h3 class="font-semibold">{{ $review->service->name ?? 'N/A' }}</h3>
+                        <div class="text-yellow-400">
+                            @for($i = 0; $i < 5; $i++)
+                                @if($i < $review->rating)
+                                <i class="fas fa-star"></i>
+                                @else
+                                <i class="far fa-star"></i>
+                                @endif
+                                @endfor
+                        </div>
+                    </div>
+                    <span class="text-sm text-gray-500">{{ $review->created_at->format('M d, Y') }}</span>
                 </div>
-                <p class="text-gray-600 mb-3">{{ $review->comment }}</p>
-                <span class="text-sm text-gray-500">{{ $review->created_at->format('M d, Y') }}</span>
+                <p class="text-gray-600">{{ $review->comment }}</p>
             </div>
             @endforeach
         </div>
